@@ -18,7 +18,7 @@ import { MyContext } from './types';
 const RedisStore = connectRedis(session);
 const redisClient = createClient({ legacyMode: true });
 redisClient.connect().catch(console.error);
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis();
 
 //runn
 const main = async () => {
