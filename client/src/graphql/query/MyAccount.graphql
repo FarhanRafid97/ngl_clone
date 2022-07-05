@@ -1,0 +1,6 @@
+query MyAccount {
+  myAccount {
+    id
+    username
+  }
+}

@@ -39,8 +39,11 @@ class UserResponse {
 Resolver();
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  @UseMiddleware(isAuth)
   async myAccount(@Ctx() { req }: MyContext) {
+    if (!req.session.userId) {
+      return null;
+    }
+
     return await User.findOne({ where: { id: req.session.userId } });
   }
   @Query(() => [User], { nullable: true })

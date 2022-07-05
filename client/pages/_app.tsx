@@ -1,10 +1,10 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-
-import * as ReactDOM from 'react-dom/client';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const client = new ApolloClient({
+  credentials: 'include',
   uri: 'http://localhost:4000/graphql',
   cache: new InMemoryCache(),
 });
@@ -12,7 +12,9 @@ const client = new ApolloClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />
+      <ChakraProvider>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </ApolloProvider>
   );
 }
