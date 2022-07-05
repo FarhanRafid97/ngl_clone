@@ -43,6 +43,10 @@ export class UserResolver {
   async myAccount(@Ctx() { req }: MyContext) {
     return await User.findOne({ where: { id: req.session.userId } });
   }
+  @Query(() => [User], { nullable: true })
+  async allUser() {
+    return await User.find();
+  }
   @Mutation(() => UserResponse, { nullable: true })
   async createUser(
     @Arg('username') username: string,

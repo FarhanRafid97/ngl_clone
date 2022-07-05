@@ -10,22 +10,29 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@chakra-ui/react": "^2.2.1",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
     "@graphql-codegen/cli": "^2.7.0",
-    "graphql": "^16.5.0",
-    "next": "12.2.0",
+    "formik": "^2.2.9",
+    "graphql": "^15.8.0",
+    "graphql-tag": "^2.12.6",
+    "next": "^12.2.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-is": "^18.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.7.0",
+    "@graphql-codegen/typescript": "2.6.0",
+    "@graphql-codegen/typescript-operations": "2.4.3",
+    "@graphql-codegen/typescript-react-apollo": "3.2.17",
     "@types/node": "18.0.1",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
     "eslint": "8.19.0",
     "eslint-config-next": "12.2.0",
-    "typescript": "4.7.4",
-    "@graphql-codegen/typescript": "2.6.0",
-    "@graphql-codegen/typescript-operations": "2.4.3",
-    "@graphql-codegen/typescript-react-apollo": "3.2.17",
-    "@graphql-codegen/cli": "2.7.0"
+    "typescript": "4.7.4"
   }
 }
