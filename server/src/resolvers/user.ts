@@ -12,6 +12,7 @@ import {
   UseMiddleware,
 } from 'type-graphql';
 import { User } from '../entities/User';
+import { COOKIE_NAME } from '../constants';
 
 declare module 'express-session' {
   interface SessionData {
@@ -97,5 +98,19 @@ export class UserResolver {
     }
     req.session.userId = user.id;
     return { user };
+  }
+  @Mutation(() => Boolean)
+  logOut(@Ctx() { req, res }: MyContext): Promise<boolean> {
+    return new Promise((resolve) => {
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+        return resolve(true);
+      });
+    });
   }
 }
