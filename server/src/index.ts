@@ -11,7 +11,9 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { COOKIE_NAME, __prod__ } from './constants';
+import { Message } from './entities/Message';
 import { User } from './entities/User';
+import { MessageResolver } from './resolvers/message';
 import { UserResolver } from './resolvers/user';
 import { MyContext } from './types';
 
@@ -29,7 +31,7 @@ const main = async () => {
     password: 'farhan322',
     logging: true,
     synchronize: true,
-    entities: [User],
+    entities: [User, Message],
   });
 
   const app = express();
@@ -61,7 +63,7 @@ const main = async () => {
 
   const appolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, MessageResolver],
       validate: false,
     }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],

@@ -1,0 +1,11 @@
+query MyQuestion {
+  myAccount {
+    id
+    username
+    messages {
+      id
+      receiverId
+      message
+    }
+  }
+}

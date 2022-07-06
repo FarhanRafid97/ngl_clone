@@ -42,7 +42,12 @@ export class UserResolver {
       return null;
     }
 
-    return await User.findOne({ where: { id: req.session.userId } });
+    const user = await User.findOne({
+      where: { id: req.session.userId },
+      relations: ['messages'],
+    });
+    console.log('useerr', user);
+    return user;
   }
   @Query(() => [User], { nullable: true })
   async allUser() {

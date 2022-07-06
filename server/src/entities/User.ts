@@ -4,9 +4,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Message } from './Message';
 
 @ObjectType()
 @Entity()
@@ -22,6 +25,10 @@ export class User extends BaseEntity {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => [Message])
+  @OneToMany(() => Message, (message) => message.receiver)
+  messages!: Message[];
 
   @Field()
   @Column({ unique: true })

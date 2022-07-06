@@ -22,11 +22,22 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['Float'];
+  message: Scalars['String'];
+  receiver: User;
+  receiverId: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: UserResponse;
   logOut: Scalars['Boolean'];
   loginUser: UserResponse;
+  sendMessage: Message;
 };
 
 
@@ -41,8 +52,15 @@ export type MutationLoginUserArgs = {
   username: Scalars['String'];
 };
 
+
+export type MutationSendMessageArgs = {
+  message: Scalars['String'];
+  username: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  allMessage?: Maybe<Array<Message>>;
   allUser?: Maybe<Array<User>>;
   myAccount?: Maybe<User>;
 };
@@ -51,6 +69,7 @@ export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime'];
   id: Scalars['Float'];
+  messages: Array<Message>;
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };
@@ -84,6 +103,14 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: any } | null, error?: { __typename?: 'FieldError', field: string, message: string } | null } };
 
+export type SendMessageMutationVariables = Exact<{
+  username: Scalars['String'];
+  message: Scalars['String'];
+}>;
+
+
+export type SendMessageMutation = { __typename?: 'Mutation', sendMessage: { __typename?: 'Message', message: string, createdAt: any, receiver: { __typename?: 'User', username: string } } };
+
 export type AllUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -93,6 +120,11 @@ export type MyAccountQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MyAccountQuery = { __typename?: 'Query', myAccount?: { __typename?: 'User', id: number, username: string } | null };
+
+export type MyQuestionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyQuestionQuery = { __typename?: 'Query', myAccount?: { __typename?: 'User', id: number, username: string, messages: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string }> } | null };
 
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
@@ -213,6 +245,44 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const SendMessageDocument = gql`
+    mutation SendMessage($username: String!, $message: String!) {
+  sendMessage(username: $username, message: $message) {
+    message
+    createdAt
+    receiver {
+      username
+    }
+  }
+}
+    `;
+export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      message: // value for 'message'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
+      }
+export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
+export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const AllUserDocument = gql`
     query AllUser {
   allUser {
@@ -283,3 +353,43 @@ export function useMyAccountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type MyAccountQueryHookResult = ReturnType<typeof useMyAccountQuery>;
 export type MyAccountLazyQueryHookResult = ReturnType<typeof useMyAccountLazyQuery>;
 export type MyAccountQueryResult = Apollo.QueryResult<MyAccountQuery, MyAccountQueryVariables>;
+export const MyQuestionDocument = gql`
+    query MyQuestion {
+  myAccount {
+    id
+    username
+    messages {
+      id
+      receiverId
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useMyQuestionQuery__
+ *
+ * To run a query within a React component, call `useMyQuestionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyQuestionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyQuestionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyQuestionQuery(baseOptions?: Apollo.QueryHookOptions<MyQuestionQuery, MyQuestionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyQuestionQuery, MyQuestionQueryVariables>(MyQuestionDocument, options);
+      }
+export function useMyQuestionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyQuestionQuery, MyQuestionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyQuestionQuery, MyQuestionQueryVariables>(MyQuestionDocument, options);
+        }
+export type MyQuestionQueryHookResult = ReturnType<typeof useMyQuestionQuery>;
+export type MyQuestionLazyQueryHookResult = ReturnType<typeof useMyQuestionLazyQuery>;
+export type MyQuestionQueryResult = Apollo.QueryResult<MyQuestionQuery, MyQuestionQueryVariables>;
