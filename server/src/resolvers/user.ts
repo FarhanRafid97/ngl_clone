@@ -1,5 +1,4 @@
 import argon2 from 'argon2';
-import { isAuth } from '../Middleware/isAuth';
 import { MyContext } from 'src/types';
 import {
   Arg,
@@ -9,10 +8,9 @@ import {
   ObjectType,
   Query,
   Resolver,
-  UseMiddleware,
 } from 'type-graphql';
-import { User } from '../entities/User';
 import { COOKIE_NAME } from '../constants';
+import { User } from '../entities/User';
 
 declare module 'express-session' {
   interface SessionData {
@@ -50,7 +48,7 @@ export class UserResolver {
   async allUser() {
     return await User.find();
   }
-  @Mutation(() => UserResponse, { nullable: true })
+  @Mutation(() => UserResponse)
   async createUser(
     @Arg('username') username: string,
     @Arg('password') password: string,

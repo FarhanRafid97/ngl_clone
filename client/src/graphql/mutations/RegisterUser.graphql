@@ -5,5 +5,9 @@ mutation CreateUser($username: String!, $password: String!) {
       username
       createdAt
     }
+    error {
+      field
+      message
+    }
   }
 }

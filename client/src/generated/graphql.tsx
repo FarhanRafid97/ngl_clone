@@ -24,7 +24,7 @@ export type FieldError = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createUser?: Maybe<UserResponse>;
+  createUser: UserResponse;
   logOut: Scalars['Boolean'];
   loginUser: UserResponse;
 };
@@ -82,7 +82,7 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: any } | null } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: any } | null, error?: { __typename?: 'FieldError', field: string, message: string } | null } };
 
 export type AllUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -178,6 +178,10 @@ export const CreateUserDocument = gql`
       id
       username
       createdAt
+    }
+    error {
+      field
+      message
     }
   }
 }
