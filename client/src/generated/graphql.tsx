@@ -62,7 +62,13 @@ export type Query = {
   __typename?: 'Query';
   allMessage?: Maybe<Array<Message>>;
   allUser?: Maybe<Array<User>>;
+  message?: Maybe<Message>;
   myAccount?: Maybe<User>;
+};
+
+
+export type QueryMessageArgs = {
+  id: Scalars['Int'];
 };
 
 export type User = {
@@ -115,6 +121,13 @@ export type AllUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllUserQuery = { __typename?: 'Query', allUser?: Array<{ __typename?: 'User', id: number, username: string }> | null };
+
+export type MessageQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type MessageQuery = { __typename?: 'Query', message?: { __typename?: 'Message', message: string } | null };
 
 export type MyAccountQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -318,6 +331,41 @@ export function useAllUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Al
 export type AllUserQueryHookResult = ReturnType<typeof useAllUserQuery>;
 export type AllUserLazyQueryHookResult = ReturnType<typeof useAllUserLazyQuery>;
 export type AllUserQueryResult = Apollo.QueryResult<AllUserQuery, AllUserQueryVariables>;
+export const MessageDocument = gql`
+    query Message($id: Int!) {
+  message(id: $id) {
+    message
+  }
+}
+    `;
+
+/**
+ * __useMessageQuery__
+ *
+ * To run a query within a React component, call `useMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMessageQuery(baseOptions: Apollo.QueryHookOptions<MessageQuery, MessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
+      }
+export function useMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageQuery, MessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
+        }
+export type MessageQueryHookResult = ReturnType<typeof useMessageQuery>;
+export type MessageLazyQueryHookResult = ReturnType<typeof useMessageLazyQuery>;
+export type MessageQueryResult = Apollo.QueryResult<MessageQuery, MessageQueryVariables>;
 export const MyAccountDocument = gql`
     query MyAccount {
   myAccount {

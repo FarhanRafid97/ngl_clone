@@ -1,0 +1,5 @@
+query Message($id: Int!) {
+  message(id: $id) {
+    message
+  }
+}

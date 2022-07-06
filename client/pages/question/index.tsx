@@ -11,7 +11,7 @@ const Index: React.FC<IndexProps> = ({}) => {
     <Layout variant={'main'} headTitle={'question'}>
       <Flex>
         {myQuestion?.map((m, i) => (
-          <NextLink key={i} href={`${m.id}`}>
+          <NextLink key={i} href={`/question/detail/${m.id}`}>
             <Link padding="15">Open</Link>
           </NextLink>
         ))}

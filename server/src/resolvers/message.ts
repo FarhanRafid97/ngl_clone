@@ -1,7 +1,7 @@
 import { Message } from '../entities/Message';
 
 import { MyContext } from 'src/types';
-import { Query, Ctx, Resolver, Mutation, Arg } from 'type-graphql';
+import { Query, Ctx, Resolver, Mutation, Arg, Int } from 'type-graphql';
 import { User } from '../entities/User';
 
 Resolver();
@@ -9,6 +9,10 @@ export class MessageResolver {
   @Query(() => [Message], { nullable: true })
   async allMessage(): Promise<Message[]> {
     return await Message.find({ relations: ['receiver'] });
+  }
+  @Query(() => Message, { nullable: true })
+  async message(@Arg('id', () => Int) id: number): Promise<Message | null> {
+    return await Message.findOne({ where: { id }, relations: ['receiver'] });
   }
   @Mutation(() => Message)
   async sendMessage(
