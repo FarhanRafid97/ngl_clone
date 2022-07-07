@@ -1,9 +1,8 @@
 mutation SendMessage($username: String!, $message: String!) {
   sendMessage(username: $username, message: $message) {
+    id
+    receiverId
     message
-    createdAt
-    receiver {
-      username
-    }
+    opened
   }
 }

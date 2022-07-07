@@ -1,11 +1,10 @@
 import {
-  Flex,
-  Text,
-  Box,
-  Input,
-  Textarea,
   Button,
+  Flex,
   Heading,
+  Text,
+  Textarea,
+  useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -14,19 +13,24 @@ import {
   useAllUserQuery,
   useSendMessageMutation,
 } from '../../src/generated/graphql';
+import withApollo from '../../src/utils/createWithApollo';
 
 interface UsernamePageProps {
   params: { username: string };
 }
 
 const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
+  //params
   const router = useRouter();
   const username = router.query.username as string;
   const { data } = useAllUserQuery();
+  //send message
   const [sendMessage] = useSendMessageMutation();
   const [message, setMessage] = useState('');
+  //validated path
   const isValidPath = data?.allUser?.filter((u) => u.username === username);
-  console.log(isValidPath);
+  const toast = useToast();
+
   if (isValidPath?.length === 0) {
     return (
       <Layout variant={'main'} headTitle={'404'}>
@@ -34,12 +38,27 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
       </Layout>
     );
   }
-
   const HandlerSendMessage = async () => {
     if (!username) {
       return null;
     }
-    const data = await sendMessage({ variables: { username, message } });
+    const data = await sendMessage({
+      variables: { username, message },
+      update: (cache, { data }) => {
+        cache.evict({ fieldName: 'allMessage:{}' });
+      },
+    });
+    if (data) {
+      toast({
+        title: 'Message Sended.',
+        description: `Success Send Message To ${username}`,
+        status: 'success',
+        position: 'top',
+        duration: 3000,
+        isClosable: true,
+      });
+      setMessage('');
+    }
     console.log(data);
   };
   return (

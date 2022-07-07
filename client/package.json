@@ -10,13 +10,13 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
+    "@apollo/client": "^3.6.8",
     "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@graphql-codegen/cli": "^2.7.0",
     "formik": "^2.2.9",
-    "graphql": "^15.8.0",
+    "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
     "next": "^12.2.0",
     "react": "18.2.0",

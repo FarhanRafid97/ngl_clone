@@ -1,0 +1,8 @@
+query AllMessage {
+  allMessage {
+    id
+    receiverId
+    message
+    opened
+  }
+}

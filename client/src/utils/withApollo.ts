@@ -1,7 +1,7 @@
 import withApollo from './createWithApollo';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { NextPageContext } from 'next';
-import { AllUserQuery } from '../generated/graphql';
+import { AllMessageQuery, AllUserQuery } from '../generated/graphql';
 
 const createClient = (ctx: NextPageContext | undefined) =>
   new ApolloClient({
@@ -13,6 +13,31 @@ const createClient = (ctx: NextPageContext | undefined) =>
           ? ctx?.req?.headers.cookie
           : undefined) || '',
     },
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            message: {
+              keyArgs: [],
+              merge(
+                existing: AllMessageQuery | undefined,
+                incoming: AllMessageQuery
+              ): AllMessageQuery | null {
+                console.log('posts apollo exist', existing);
+                console.log('posts apollo incoming', incoming);
+                // return {
+                //   ...incoming,
+                //   allMessage: [
+                //     ...(existing?.allMessage || []),
+                //     ...incoming.allMessage,
+                //   ],
+                // };
+                return null;
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 export default withApollo(createClient);

@@ -7,7 +7,7 @@ Resolver();
 export class MessageResolver {
   @Query(() => [Message], { nullable: true })
   async allMessage(): Promise<Message[]> {
-    return await Message.find({ relations: ['receiver'] });
+    return await Message.find();
   }
   @Query(() => Message, { nullable: true })
   async message(@Arg('id', () => Int) id: number): Promise<Message | null> {

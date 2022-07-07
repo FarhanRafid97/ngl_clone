@@ -131,7 +131,12 @@ export type SendMessageMutationVariables = Exact<{
 }>;
 
 
-export type SendMessageMutation = { __typename?: 'Mutation', sendMessage: { __typename?: 'Message', message: string, createdAt: any, receiver: { __typename?: 'User', username: string } } };
+export type SendMessageMutation = { __typename?: 'Mutation', sendMessage: { __typename?: 'Message', id: number, receiverId: number, message: string, opened: boolean } };
+
+export type AllMessageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllMessageQuery = { __typename?: 'Query', allMessage?: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string, opened: boolean }> | null };
 
 export type AllUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -314,11 +319,10 @@ export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMut
 export const SendMessageDocument = gql`
     mutation SendMessage($username: String!, $message: String!) {
   sendMessage(username: $username, message: $message) {
+    id
+    receiverId
     message
-    createdAt
-    receiver {
-      username
-    }
+    opened
   }
 }
     `;
@@ -349,6 +353,43 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const AllMessageDocument = gql`
+    query AllMessage {
+  allMessage {
+    id
+    receiverId
+    message
+    opened
+  }
+}
+    `;
+
+/**
+ * __useAllMessageQuery__
+ *
+ * To run a query within a React component, call `useAllMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllMessageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllMessageQuery(baseOptions?: Apollo.QueryHookOptions<AllMessageQuery, AllMessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllMessageQuery, AllMessageQueryVariables>(AllMessageDocument, options);
+      }
+export function useAllMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllMessageQuery, AllMessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllMessageQuery, AllMessageQueryVariables>(AllMessageDocument, options);
+        }
+export type AllMessageQueryHookResult = ReturnType<typeof useAllMessageQuery>;
+export type AllMessageLazyQueryHookResult = ReturnType<typeof useAllMessageLazyQuery>;
+export type AllMessageQueryResult = Apollo.QueryResult<AllMessageQuery, AllMessageQueryVariables>;
 export const AllUserDocument = gql`
     query AllUser {
   allUser {
