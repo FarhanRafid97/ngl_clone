@@ -1,0 +1,8 @@
+mutation OpenedMessage($opened: Boolean!, $id: Int!) {
+  openedMessage(opened: $opened, id: $id) {
+    opened
+    message
+    id
+    receiverId
+  }
+}

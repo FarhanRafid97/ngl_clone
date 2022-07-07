@@ -30,6 +30,10 @@ export class Message extends BaseEntity {
   message!: string;
 
   @Field()
+  @Column({ default: false })
+  opened!: boolean;
+
+  @Field()
   @Column()
   receiverId!: number;
 

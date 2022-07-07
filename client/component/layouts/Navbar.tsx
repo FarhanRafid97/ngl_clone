@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   }
 
   return (
-    <Box bg="blue.400" padding="15px 0">
+    <Box bg="white" boxShadow="xl" padding="15px 0">
       <Flex w="800px" m="auto" justifyContent="space-between" align="center">
         <Box fontSize="18px">Logo</Box>
         <Flex align="center" columnGap="15px">

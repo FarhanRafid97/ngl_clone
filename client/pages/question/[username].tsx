@@ -44,7 +44,7 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
   };
   return (
     <Layout variant={'main'} headTitle={'Your page'}>
-      <Flex margin="auto" bg="blue.100" height="100vh">
+      <Flex margin="auto" height="100vh">
         <Flex
           borderRadius="15px"
           position="relative"
@@ -52,6 +52,8 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
           padding="15px"
           direction="column"
           margin="auto"
+          bgGradient="linear(to-r, green.200, blue.500)"
+          color="white"
         >
           <Text textAlign="center" mb={4}>
             Send Me Anonymous
@@ -60,6 +62,7 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             w="300px"
+            background="gray.300"
             placeholder="send me anonymous"
           />
           <Button

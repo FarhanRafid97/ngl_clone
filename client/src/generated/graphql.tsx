@@ -27,6 +27,7 @@ export type Message = {
   createdAt: Scalars['DateTime'];
   id: Scalars['Float'];
   message: Scalars['String'];
+  opened: Scalars['Boolean'];
   receiver: User;
   receiverId: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
@@ -137,7 +138,7 @@ export type MyAccountQuery = { __typename?: 'Query', myAccount?: { __typename?: 
 export type MyQuestionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyQuestionQuery = { __typename?: 'Query', myAccount?: { __typename?: 'User', id: number, username: string, messages: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string }> } | null };
+export type MyQuestionQuery = { __typename?: 'Query', myAccount?: { __typename?: 'User', id: number, username: string, messages: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string, opened: boolean }> } | null };
 
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
@@ -410,6 +411,7 @@ export const MyQuestionDocument = gql`
       id
       receiverId
       message
+      opened
     }
   }
 }

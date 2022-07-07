@@ -1,5 +1,5 @@
 import React, { Children } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 
 export type VariantType = 'home' | 'main';
 interface WrapperProps {
@@ -9,14 +9,16 @@ interface WrapperProps {
 
 const Wrapper: React.FC<WrapperProps> = ({ children, variant }) => {
   return (
-    <Box
-      w={variant === 'home' ? '100%' : '800px'}
-      minH="100vh"
-      margin="auto"
-      mx="auto"
-    >
-      {children}
-    </Box>
+    <Flex w="100%" minH="100vh" bg="gray.50">
+      <Box
+        w={variant === 'home' ? '100%' : '800px'}
+        minH="100vh"
+        margin="auto"
+        mx="auto"
+      >
+        {children}
+      </Box>
+    </Flex>
   );
 };
 
