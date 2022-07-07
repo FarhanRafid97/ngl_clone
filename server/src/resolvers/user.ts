@@ -45,6 +45,9 @@ export class UserResolver {
     const user = await User.findOne({
       where: { id: req.session.userId },
       relations: ['messages'],
+      order: {
+        messages: { opened: 'ASC' },
+      },
     });
     console.log('useerr', user);
     return user;

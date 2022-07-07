@@ -38,6 +38,7 @@ export type Mutation = {
   createUser: UserResponse;
   logOut: Scalars['Boolean'];
   loginUser: UserResponse;
+  openedMessage: Message;
   sendMessage: Message;
 };
 
@@ -51,6 +52,12 @@ export type MutationCreateUserArgs = {
 export type MutationLoginUserArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+
+export type MutationOpenedMessageArgs = {
+  id: Scalars['Int'];
+  opened: Scalars['Boolean'];
 };
 
 
@@ -101,6 +108,14 @@ export type LoginUserMutationVariables = Exact<{
 
 
 export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'UserResponse', error?: { __typename?: 'FieldError', field: string, message: string } | null, user?: { __typename?: 'User', id: number, username: string } | null } };
+
+export type OpenedMessageMutationVariables = Exact<{
+  opened: Scalars['Boolean'];
+  id: Scalars['Int'];
+}>;
+
+
+export type OpenedMessageMutation = { __typename?: 'Mutation', openedMessage: { __typename?: 'Message', opened: boolean, message: string, id: number, receiverId: number } };
 
 export type CreateUserMutationVariables = Exact<{
   username: Scalars['String'];
@@ -217,6 +232,43 @@ export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const OpenedMessageDocument = gql`
+    mutation OpenedMessage($opened: Boolean!, $id: Int!) {
+  openedMessage(opened: $opened, id: $id) {
+    opened
+    message
+    id
+    receiverId
+  }
+}
+    `;
+export type OpenedMessageMutationFn = Apollo.MutationFunction<OpenedMessageMutation, OpenedMessageMutationVariables>;
+
+/**
+ * __useOpenedMessageMutation__
+ *
+ * To run a mutation, you first call `useOpenedMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOpenedMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [openedMessageMutation, { data, loading, error }] = useOpenedMessageMutation({
+ *   variables: {
+ *      opened: // value for 'opened'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOpenedMessageMutation(baseOptions?: Apollo.MutationHookOptions<OpenedMessageMutation, OpenedMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OpenedMessageMutation, OpenedMessageMutationVariables>(OpenedMessageDocument, options);
+      }
+export type OpenedMessageMutationHookResult = ReturnType<typeof useOpenedMessageMutation>;
+export type OpenedMessageMutationResult = Apollo.MutationResult<OpenedMessageMutation>;
+export type OpenedMessageMutationOptions = Apollo.BaseMutationOptions<OpenedMessageMutation, OpenedMessageMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($username: String!, $password: String!) {
   createUser(username: $username, password: $password) {

@@ -62,7 +62,7 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             w="300px"
-            background="gray.300"
+            background="whiteAlpha.500"
             placeholder="send me anonymous"
           />
           <Button
