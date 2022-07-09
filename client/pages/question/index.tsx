@@ -38,7 +38,13 @@ const Index: React.FC<IndexProps> = ({}) => {
                   if (m.opened) {
                     return;
                   }
-                  openedMessage({ variables: { id: m.id, opened: true } });
+                  openedMessage({
+                    variables: { id: m.id, opened: true },
+                    update: (cache, { data }) => {
+                      console.log(data);
+                      return cache.readQuery;
+                    },
+                  });
                 }}
               >
                 <Image

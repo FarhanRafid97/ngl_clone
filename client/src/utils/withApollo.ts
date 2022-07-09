@@ -1,9 +1,9 @@
-import withApollo from './createWithApollo';
+import { withApollo } from 'next-apollo';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { NextPageContext } from 'next';
 import { AllMessageQuery, AllUserQuery } from '../generated/graphql';
 
-const createClient = (ctx: NextPageContext | undefined) =>
+const createClient = (ctx: NextPageContext) =>
   new ApolloClient({
     uri: 'http://localhost:4000/graphql',
     credentials: 'include',

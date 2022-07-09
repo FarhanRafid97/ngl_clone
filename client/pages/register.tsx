@@ -11,6 +11,7 @@ import {
 } from '../src/generated/graphql';
 import { errorHandler } from '../src/utils/errorHandler';
 import { useRouter } from 'next/router';
+import withApollo from '../src/utils/createWithApollo';
 
 interface RegisterProps {}
 

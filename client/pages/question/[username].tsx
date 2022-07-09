@@ -6,11 +6,17 @@ import {
   Textarea,
   useToast,
 } from '@chakra-ui/react';
+import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Layout from '../../component/layouts/Layout';
 import {
+  AllMessageDocument,
+  AllMessageQuery,
+  MyQuestionDocument,
+  MyQuestionQuery,
   useAllUserQuery,
+  useMyQuestionQuery,
   useSendMessageMutation,
 } from '../../src/generated/graphql';
 import withApollo from '../../src/utils/createWithApollo';
@@ -24,6 +30,7 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
   const router = useRouter();
   const username = router.query.username as string;
   const { data } = useAllUserQuery();
+  const { data: messages } = useMyQuestionQuery();
   //send message
   const [sendMessage] = useSendMessageMutation();
   const [message, setMessage] = useState('');
@@ -45,7 +52,22 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
     const data = await sendMessage({
       variables: { username, message },
       update: (cache, { data }) => {
-        cache.evict({ fieldName: 'allMessage:{}' });
+        const dataMessage = cache.readQuery<MyQuestionQuery>({
+          query: MyQuestionDocument,
+        })?.myAccount;
+        console.log('datamessage', dataMessage);
+        console.log('new data', data);
+        cache.writeQuery<MyQuestionQuery>({
+          query: MyQuestionDocument,
+          data: {
+            myAccount: {
+              __typename: 'User',
+              id: dataMessage!.id as number,
+              username: dataMessage!.username,
+              messages: [data!.sendMessage, ...dataMessage!.messages],
+            },
+          },
+        });
       },
     });
     if (data) {
@@ -59,7 +81,7 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
       });
       setMessage('');
     }
-    console.log(data);
+    return data;
   };
   return (
     <Layout variant={'main'} headTitle={'Your page'}>

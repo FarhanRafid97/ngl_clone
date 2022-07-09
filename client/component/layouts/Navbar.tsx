@@ -43,6 +43,9 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <>
         <Flex columnGap="15px" alignItems="center">
+          <NextLink href="/">
+            <Link>Home</Link>
+          </NextLink>
           <NextLink href="/profile">
             <Link>Profile</Link>
           </NextLink>
