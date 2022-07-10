@@ -1,0 +1,10 @@
+fragment QuestionSnippet on User {
+  id
+  username
+  messages {
+    id
+    receiverId
+    message
+    opened
+  }
+}

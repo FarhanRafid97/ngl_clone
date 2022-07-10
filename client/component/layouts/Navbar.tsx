@@ -1,5 +1,6 @@
 import { Box, Avatar, Flex, Link, Text, Button } from '@chakra-ui/react';
 import {
+  useAllMessageQuery,
   useLogOutMutation,
   useMyAccountQuery,
 } from '../../src/generated/graphql';
@@ -12,9 +13,8 @@ interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const router = useRouter();
-  const { data, loading } = useMyAccountQuery({
-    skip: isServer(),
-  });
+
+  const { data, loading } = useMyAccountQuery({});
   const [logout, { loading: logoutFetch }] = useLogOutMutation();
   const apolloClient = useApolloClient();
 
@@ -25,6 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
       router.push('/login');
     });
   };
+  const { data: allMessage } = useAllMessageQuery();
 
   let body;
   if (isServer() || loading) {
@@ -43,6 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <>
         <Flex columnGap="15px" alignItems="center">
+          <Text>{allMessage?.allMessage?.length}</Text>
           <NextLink href="/">
             <Link>Home</Link>
           </NextLink>
@@ -64,7 +66,12 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   }
 
   return (
-    <Box bg="white" boxShadow="xl" padding="15px 0">
+    <Box
+      bg="#FFFFFF"
+      borderBottom="1px solid #dbdbdb"
+      boxShadow="xl"
+      padding="15px 0"
+    >
       <Flex w="800px" m="auto" justifyContent="space-between" align="center">
         <Box fontSize="18px">Logo</Box>
         <Flex align="center" columnGap="15px">

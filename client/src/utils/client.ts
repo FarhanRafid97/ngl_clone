@@ -1,5 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { AllMessageQuery, MyAccountQuery } from '../generated/graphql';
+import {
+  AllMessageQuery,
+  MyAccountQuery,
+  QuestionOwnerQuery,
+} from '../generated/graphql';
 
 export const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -26,6 +30,28 @@ export const client = new ApolloClient({
               };
             },
           },
+          // questionOwner: {
+          //   keyArgs: [],
+          //   merge(
+          //     existing: QuestionOwnerQuery | undefined,
+          //     incoming: QuestionOwnerQuery
+          //   ): QuestionOwnerQuery | null {
+          //     console.log('posts apollo exist', existing);
+          //     console.log('posts apollo incoming', incoming);
+
+          //     return {
+          //       ...incoming,
+          //       questionOwner: {
+          //         id: incoming.questionOwner?.id as number,
+          //         username: incoming.questionOwner?.username as string,
+          //         messages: [
+          //           ...(existing?.questionOwner?.messages || []),
+          //           ...(incoming.questionOwner?.messages || []),
+          //         ],
+          //       },
+          //     };
+          //   },
+          // },
         },
       },
     },

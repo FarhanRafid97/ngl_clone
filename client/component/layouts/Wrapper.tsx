@@ -9,12 +9,13 @@ interface WrapperProps {
 
 const Wrapper: React.FC<WrapperProps> = ({ children, variant }) => {
   return (
-    <Flex w="100%" minH="100vh" bg="gray.50">
+    <Flex w="100%" maxH="100vh" bg="#FAFAFA">
       <Box
-        w={variant === 'home' ? '100%' : '800px'}
+        w={variant === 'home' ? '650px' : '800px'}
         minH="100vh"
         margin="auto"
         mx="auto"
+        paddingTop="25px"
       >
         {children}
       </Box>

@@ -37,6 +37,10 @@ class UserResponse {
 Resolver();
 export class UserResolver {
   @Query(() => User, { nullable: true })
+  async questionOwner(@Arg('username') username: string) {
+    return User.findOne({ where: { username }, relations: ['messages'] });
+  }
+  @Query(() => User, { nullable: true })
   async myAccount(@Ctx() { req }: MyContext) {
     if (!req.session.userId) {
       return null;

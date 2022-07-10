@@ -72,11 +72,17 @@ export type Query = {
   allUser?: Maybe<Array<User>>;
   message?: Maybe<Message>;
   myAccount?: Maybe<User>;
+  questionOwner?: Maybe<User>;
 };
 
 
 export type QueryMessageArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryQuestionOwnerArgs = {
+  username: Scalars['String'];
 };
 
 export type User = {
@@ -93,6 +99,8 @@ export type UserResponse = {
   error?: Maybe<FieldError>;
   user?: Maybe<User>;
 };
+
+export type QuestionSnippetFragment = { __typename?: 'User', id: number, username: string, messages: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string, opened: boolean }> };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -160,6 +168,25 @@ export type MyQuestionQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyQuestionQuery = { __typename?: 'Query', myAccount?: { __typename?: 'User', id: number, username: string, messages: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string, opened: boolean }> } | null };
 
+export type QuestionOwnerQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type QuestionOwnerQuery = { __typename?: 'Query', questionOwner?: { __typename?: 'User', id: number, username: string, messages: Array<{ __typename?: 'Message', id: number, receiverId: number, message: string, opened: boolean }> } | null };
+
+export const QuestionSnippetFragmentDoc = gql`
+    fragment QuestionSnippet on User {
+  id
+  username
+  messages {
+    id
+    receiverId
+    message
+    opened
+  }
+}
+    `;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -536,3 +563,45 @@ export function useMyQuestionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type MyQuestionQueryHookResult = ReturnType<typeof useMyQuestionQuery>;
 export type MyQuestionLazyQueryHookResult = ReturnType<typeof useMyQuestionLazyQuery>;
 export type MyQuestionQueryResult = Apollo.QueryResult<MyQuestionQuery, MyQuestionQueryVariables>;
+export const QuestionOwnerDocument = gql`
+    query QuestionOwner($username: String!) {
+  questionOwner(username: $username) {
+    id
+    username
+    messages {
+      id
+      receiverId
+      message
+      opened
+    }
+  }
+}
+    `;
+
+/**
+ * __useQuestionOwnerQuery__
+ *
+ * To run a query within a React component, call `useQuestionOwnerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionOwnerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuestionOwnerQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useQuestionOwnerQuery(baseOptions: Apollo.QueryHookOptions<QuestionOwnerQuery, QuestionOwnerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<QuestionOwnerQuery, QuestionOwnerQueryVariables>(QuestionOwnerDocument, options);
+      }
+export function useQuestionOwnerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionOwnerQuery, QuestionOwnerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<QuestionOwnerQuery, QuestionOwnerQueryVariables>(QuestionOwnerDocument, options);
+        }
+export type QuestionOwnerQueryHookResult = ReturnType<typeof useQuestionOwnerQuery>;
+export type QuestionOwnerLazyQueryHookResult = ReturnType<typeof useQuestionOwnerLazyQuery>;
+export type QuestionOwnerQueryResult = Apollo.QueryResult<QuestionOwnerQuery, QuestionOwnerQueryVariables>;

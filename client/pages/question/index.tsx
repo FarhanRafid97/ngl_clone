@@ -1,6 +1,7 @@
 import {
   useMyQuestionQuery,
   useOpenedMessageMutation,
+  useQuestionOwnerQuery,
 } from '../../src/generated/graphql';
 import { Heading, Flex, Box, Link, Text, Image } from '@chakra-ui/react';
 import Layout from '../../component/layouts/Layout';
@@ -11,23 +12,39 @@ interface IndexProps {}
 
 const Index: React.FC<IndexProps> = ({}) => {
   const { data } = useMyQuestionQuery();
+
   const [openedMessage] = useOpenedMessageMutation();
   const myQuestion = data?.myAccount?.messages;
 
   return (
-    <Layout variant={'main'} headTitle={'question'}>
-      <Flex alignItems="center" direction="column" minH="100vh" rowGap="25px">
-        <Heading>Your Question</Heading>
+    <Layout variant={'home'} headTitle={'question'}>
+      <Box alignItems="center" minH="100vh">
+        <Heading
+          textAlign="center"
+          p="10px"
+          w="100%"
+          bg="white"
+          size="lg"
+          borderRadius="10px"
+          border="1px solid #dbdbdb"
+          mb={4}
+        >
+          Your Question
+        </Heading>
         <Flex
-          columnGap="15px"
+          columnGap="25px"
           flexWrap="wrap"
           justifyContent="center"
-          rowGap="15px"
+          rowGap="25px"
+          p="20px"
+          bg="white"
+          borderRadius="10px"
+          border="1px solid #dbdbdb"
         >
-          {myQuestion?.map((m, i) => (
+          {data?.myAccount?.messages.map((m, i) => (
             <NextLink key={i} href={`/question/detail/${m.id}`}>
               <Link
-                w="150px"
+                w="130px"
                 borderRadius="15px"
                 padding="20px 30px"
                 bgGradient={
@@ -55,7 +72,7 @@ const Index: React.FC<IndexProps> = ({}) => {
             </NextLink>
           ))}
         </Flex>
-      </Flex>
+      </Box>
     </Layout>
   );
 };

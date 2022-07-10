@@ -9,10 +9,17 @@ export class MessageResolver {
   async allMessage(): Promise<Message[]> {
     return await Message.find();
   }
+
+  // @Query(() => [Message], { nullable: true })
+  // async myMessage(@Ctx() { req }: MyContext): Promise<Message[]> {
+  //   return await Message.find({ where: { id: req.session.userId } });
+  // }
+
   @Query(() => Message, { nullable: true })
   async message(@Arg('id', () => Int) id: number): Promise<Message | null> {
     return await Message.findOne({ where: { id }, relations: ['receiver'] });
   }
+
   @Mutation(() => Message)
   async openedMessage(
     @Arg('id', () => Int) id: number,

@@ -15,8 +15,11 @@ import {
   AllMessageQuery,
   MyQuestionDocument,
   MyQuestionQuery,
+  QuestionOwnerDocument,
+  QuestionOwnerQuery,
   useAllUserQuery,
   useMyQuestionQuery,
+  useQuestionOwnerQuery,
   useSendMessageMutation,
 } from '../../src/generated/graphql';
 import withApollo from '../../src/utils/createWithApollo';
@@ -29,13 +32,21 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
   //params
   const router = useRouter();
   const username = router.query.username as string;
-  const { data } = useAllUserQuery();
+  const { data: allUser } = useAllUserQuery();
+  // const { data: myQuestion } = useMyQuestionQuery();
   const { data: messages } = useMyQuestionQuery();
+  const { data: ownerQuestion } = useQuestionOwnerQuery({
+    variables: { username },
+  });
+  console.log(ownerQuestion?.questionOwner?.id);
   //send message
+  // console.log('my question ', myQuestion);
+  // console.log('owner question ', ownerQuestion);
+
   const [sendMessage] = useSendMessageMutation();
   const [message, setMessage] = useState('');
   //validated path
-  const isValidPath = data?.allUser?.filter((u) => u.username === username);
+  const isValidPath = allUser?.allUser?.filter((u) => u.username === username);
   const toast = useToast();
 
   if (isValidPath?.length === 0) {
@@ -52,22 +63,81 @@ const UsernamePage: React.FC<UsernamePageProps> = ({}) => {
     const data = await sendMessage({
       variables: { username, message },
       update: (cache, { data }) => {
-        const dataMessage = cache.readQuery<MyQuestionQuery>({
-          query: MyQuestionDocument,
-        })?.myAccount;
-        console.log('datamessage', dataMessage);
-        console.log('new data', data);
-        cache.writeQuery<MyQuestionQuery>({
-          query: MyQuestionDocument,
+        const oldMessage = cache.readFragment<QuestionOwnerQuery>({
+          id: 'User:' + ownerQuestion?.questionOwner?.id, // The value of the to-do item's cache ID
+          fragment: gql`
+            fragment QuestionSnippet on User {
+              id
+              username
+              messages {
+                id
+                receiverId
+                message
+                opened
+              }
+            }
+          `,
+        });
+        console.log('old data', oldMessage);
+        cache.writeFragment<any>({
+          id: 'User:' + ownerQuestion?.questionOwner?.id, // The value of the to-do item's cache ID
+          fragment: gql`
+            fragment QuestionSnippet on User {
+              id
+              username
+              messages {
+                id
+                receiverId
+                message
+                opened
+              }
+            }
+          `,
           data: {
-            myAccount: {
-              __typename: 'User',
-              id: dataMessage!.id as number,
-              username: dataMessage!.username,
-              messages: [data!.sendMessage, ...dataMessage!.messages],
-            },
+            id: ownerQuestion!.questionOwner!.id as number,
+            username: ownerQuestion!.questionOwner!.username,
+            messages: [
+              data!.sendMessage,
+              ...ownerQuestion!.questionOwner!.messages,
+            ],
           },
         });
+        // if (data?.sendMessage.receiverId !== myQuestion?.myAccount?.id) {
+        //   return;
+        // }
+
+        // const dataMessage = cache.readQuery<MyQuestionQuery>({
+        //   query: MyQuestionDocument,
+        // })?.myAccount;
+        // console.log('datamessage', dataMessage);
+        // console.log('new data', data);
+        // cache.writeQuery<MyQuestionQuery>({
+        //   query: MyQuestionDocument,
+        //   data: {
+        //     myAccount: {
+        //       __typename: 'User',
+        //       id: dataMessage!.id as number,
+        //       username: dataMessage!.username,
+        //       messages: [data!.sendMessage, ...dataMessage!.messages],
+        //     },
+        //   },
+        // });
+        // const dataMessage = cache.readQuery<MyQuestionQuery>({
+        //   query: MyQuestionDocument,
+        // })?.myAccount;
+        // console.log('datamessage', dataMessage);
+        // console.log('new data', data);
+        // cache.writeQuery<MyQuestionQuery>({
+        //   query: MyQuestionDocument,
+        //   data: {
+        //     myAccount: {
+        //       __typename: 'User',
+        //       id: dataMessage!.id as number,
+        //       username: dataMessage!.username,
+        //       messages: [data!.sendMessage, ...dataMessage!.messages],
+        //     },
+        //   },
+        // });
       },
     });
     if (data) {

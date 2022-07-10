@@ -1,0 +1,12 @@
+query QuestionOwner($username: String!) {
+  questionOwner(username: $username) {
+    id
+    username
+    messages {
+      id
+      receiverId
+      message
+      opened
+    }
+  }
+}
